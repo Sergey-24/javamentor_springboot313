@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Add user</title>
+</head>
+<body>
+<form action="#" th:action="@{/admin/addNewUser}" th:object="${user}" method="post">
+    <label for="firstName">first name</label>
+    <input type="text" th:field="*{firstName}" id="firstName" placeholder="First Name">
+    <label for="lastName">last name</label>
+    <input type="text" th:field="*{lastName}" id="lastName" placeholder="Last Name">
+    <label for="age">age</label>
+    <input type="text" th:field="*{age}" id="age" placeholder="age">
+    <label for="address">address</label>
+    <input type="text" th:field="*{address}" id="address" placeholder="address">
+    <label for="password">password</label>
+    <input type="text" th:field="*{password}" id="password" placeholder="password">
+    <label>
+        <select multiple required size="2" th:name="roles" th:field="*{roles}">
+            <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
+        </select>
+    </label>
+
+    <label>
+        <p><input type="submit" value="addNewUser"></p>
+        <p><a th:href="@{/logout}">Logout</a></p>
+    </label>
+</form>
+</body>
+</html></html>

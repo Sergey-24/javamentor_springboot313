@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="UTF-8">
+<title>Update user</title>
+</head>
+<body>
+<form action="#" th:action="@{/admin/user-delete}" th:object="${user}" method="post">
+    <label for="id">ID</label>
+    <input readonly type="number" th:field="*{id}" id="id" placeholder="ID">
+    <label for="firstName">First name</label>
+    <input type="text" th:field="*{firstName}" id="firstName" placeholder="First Name">
+
+    <label for="lastName">Last name</label>
+    <input type="text" th:field="*{lastName}" id="lastName" placeholder="Last Name">
+
+    <label for="age">age</label>
+    <input type="text" th:field="*{age}" id="age" placeholder="Age">
+
+    <label for="address">address</label>
+    <input type="text" th:field="*{address}" id="address" placeholder="Address">
+
+    <label for="password">Password</label>
+    <input type="text" th:field="*{password}" id="password" placeholder="Password">
+
+    <label>
+        <select multiple required size="2" th:name="roles" th:field="*{roles}">
+            <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
+        </select>
+    </label>
+    <input type="submit" value="Delete User">
+</form>
+</body>
+</html>
