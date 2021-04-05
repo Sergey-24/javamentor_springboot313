@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Repository
-public class RoleDaoImpl implements RoleDao{
+public class RoleDaoImpl implements RoleDao {
 
     @PersistenceContext
     EntityManager entityManager;
@@ -22,7 +22,7 @@ public class RoleDaoImpl implements RoleDao{
 
     @Override
     public List<Role> findAllRoles() {
-        return entityManager.createQuery("select distinct u from Role u join fetch u.users")
+        return entityManager.createQuery("select distinct r from Role r join fetch r.users")
                 .getResultList();
     }
 
@@ -34,7 +34,7 @@ public class RoleDaoImpl implements RoleDao{
     @Override
     public Role findRoleByName(String roleName) {
         return entityManager
-                .createQuery("select u from Role u join fetch u.users where u.role = :rolename", Role.class)
+                .createQuery("select r from Role r join fetch r.users where r.role = :rolename", Role.class)
                 .setParameter("rolename", roleName)
                 .getSingleResult();
     }

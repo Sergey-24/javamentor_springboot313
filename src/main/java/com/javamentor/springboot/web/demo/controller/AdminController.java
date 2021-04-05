@@ -6,15 +6,12 @@ import com.javamentor.springboot.web.demo.service.RoleService;
 import com.javamentor.springboot.web.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@Transactional
 @RequestMapping("/admin")
 public class AdminController {
 
@@ -45,7 +42,7 @@ public class AdminController {
     @PostMapping("/addNewUser")
     public String saveUser(@RequestParam List<String> roles, User user) {
         List<Role> roleList = new ArrayList<>();
-        for(String a: roles){
+        for (String a : roles) {
             roleList.add(roleService.findRoleById(a));
         }
         user.setRoles(roleList);
@@ -62,7 +59,6 @@ public class AdminController {
 
     @PostMapping("/user-delete")
     public String deleteUser(User user) {
-
         userService.deleteUserById(user.getId());
         return "redirect:/admin";
     }
@@ -76,10 +72,9 @@ public class AdminController {
     }
 
     @PostMapping("/user-update")
-    public String updateUser(@RequestParam List<String> roles, @RequestParam String password
-            , User user) {
+    public String updateUser(@RequestParam List<String> roles, @RequestParam String password, User user) {
         List<Role> roleList = new ArrayList<>();
-        for(String a: roles){
+        for (String a : roles) {
             roleList.add(roleService.findRoleById(a));
         }
         user.setRoles(roleList);

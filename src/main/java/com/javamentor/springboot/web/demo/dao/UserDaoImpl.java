@@ -3,6 +3,7 @@ package com.javamentor.springboot.web.demo.dao;
 import com.javamentor.springboot.web.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -44,7 +45,6 @@ public class UserDaoImpl implements UserDao {
                 .createQuery("select u from User u join fetch u.roles where u.id = :id", User.class)
                 .setParameter("id", id)
                 .getSingleResult();
-//                entityManager.find(User.class, id);
     }
 
     @Override
@@ -65,8 +65,7 @@ public class UserDaoImpl implements UserDao {
         Query query = entityManager
                 .createQuery("select u.password from User u where u.firstName = :name")
                 .setParameter("name", user.getFirstName());
-        System.out.println((String) query.getSingleResult());
 
-        return (String)query.getSingleResult();
+        return (String) query.getSingleResult();
     }
 }
