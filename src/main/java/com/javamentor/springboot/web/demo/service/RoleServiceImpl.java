@@ -40,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
 
    @Override
    @Transactional
-   public Role findRoleById(String rolename) {
+   public Role findRoleByName(String rolename) {
       return roleDao.findRoleByName(rolename);
    }
 }

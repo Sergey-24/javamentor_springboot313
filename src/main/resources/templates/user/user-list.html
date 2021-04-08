@@ -1,37 +1,108 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Users</title>
-</head>
-<body>
-<div th:switch="${allUser}">
-    <h2 th:case="null">No users found!</h2>
-    <div th:case="*">
-        <h2>Users</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>First name</th>
-                <th>Last name</th>
-                <th>Age</th>
-                <th>Address</th>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${allUser}">
-                <td th:text="${user.id}"></td>
-                <td th:text="${user.firstName}"></td>
-                <td th:text="${user.lastName}"></td>
-                <td th:text="${user.age}"></td>
-                <td th:text="${user.address}"></td>
-            </tr>
-            </tbody>
-        </table>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <title>admin</title>
+</head>
+
+<body style="background-color: #f4f4f4">
+<nav class="navbar navbar-dark  bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">
+        <p class="navbar-text text-white bg-dark"><span sec:authentication="name"/> with roles: <span sec:authentication="principal.authorities"></span></p>
+    </a>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" th:href="@{/logout}">Logout</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container-fluid ">
+    <div class="row min-vh-100">
+        <div class="col-3" style="background-color: white">
+            <nav>
+                <div>
+                    <a class="nav-item nav-link  " id="nav-profile-tab-p"
+                       data-toggle="tab" href="/user" role="tab"
+                       aria-controls="nav-profile" aria-selected="false">
+                        User
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="col mt-3">
+            <div class="tab-content" id="nav-tabContent-p">
+                <div class="tab-pane fade show active " id="nav-home-p" role="tabpanel"
+                     aria-labelledby="nav-home-tab-p">
+
+                    <h1>Admin panel</h1>
+
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active border" id="nav-home-tab" data-toggle="tab"
+                               href="/user"
+                               role="tab" aria-controls="nav-home" aria-selected="true">
+                                Users table
+                            </a>
+                            <a class="nav-item nav-link  border" id="nav-profile-tab" data-toggle="tab"
+                               href="/admin/addNewUser" role="tab"
+                               aria-controls="nav-profile" aria-selected="false">
+                                New user
+                            </a>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active border rounded" id="nav-home" role="tabpanel"
+                             aria-labelledby="nav-home-tab">
+                            <div class="container ">
+                                <div class="row border rounded" style="height: 50px">
+                                    <div class="d-flex align-items-center ml-4" style="font-size: 30px">
+                                        User informatoin-page
+                                    </div>
+                                </div>
+                                <div class="row" style="background-color: white">
+                                    <div class="container m-3">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>First name</th>
+                                                <th>Last name</th>
+                                                <th>Age</th>
+                                                <th>Address</th>
+                                                <th>Role</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="user : ${allUser}">
+                                                <td th:text="${user.id}"></td>
+                                                <td th:text="${user.firstName}"></td>
+                                                <td th:text="${user.lastName}"></td>
+                                                <td th:text="${user.age}"></td>
+                                                <td th:text="${user.address}"></td>
+                                                <td th:text="${user.roles}"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <p><a th:href="@{/logout}">Logout</a></p>
 </div>
 </body>
 </html>
+

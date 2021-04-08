@@ -43,7 +43,7 @@ public class AdminController {
     public String saveUser(@RequestParam List<String> roles, User user) {
         List<Role> roleList = new ArrayList<>();
         for (String a : roles) {
-            roleList.add(roleService.findRoleById(a));
+            roleList.add(roleService.findRoleByName(a));
         }
         user.setRoles(roleList);
         userService.saveUser(user);
@@ -75,7 +75,7 @@ public class AdminController {
     public String updateUser(@RequestParam List<String> roles, @RequestParam String password, User user) {
         List<Role> roleList = new ArrayList<>();
         for (String a : roles) {
-            roleList.add(roleService.findRoleById(a));
+            roleList.add(roleService.findRoleByName(a));
         }
         user.setRoles(roleList);
         userService.updateUser(user, password);
