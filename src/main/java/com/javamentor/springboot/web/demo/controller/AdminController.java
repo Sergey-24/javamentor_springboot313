@@ -28,7 +28,7 @@ public class AdminController {
     public String showUsersForAdmin(Model model) {
         List<User> allUsers = userService.getAllUsers();
         model.addAttribute("users", allUsers);
-        return "admin/user-list";
+        return "admin/admin-list";
     }
 
     @GetMapping("/addNewUser")
@@ -36,7 +36,7 @@ public class AdminController {
         User user = new User();
         model.addAttribute("user", user);
         model.addAttribute("roles", roleService.findAllRoles());
-        return "admin/user-creat";
+        return "admin/admin-list";
     }
 
     @PostMapping("/addNewUser")
@@ -54,7 +54,7 @@ public class AdminController {
     public String deleteUserFrom(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userService.findUserById(id));
         model.addAttribute("roles", roleService.findAllRoles());
-        return "admin/user-delete";
+        return "admin/admin-list";
     }
 
     @PostMapping("/user-delete")
@@ -68,7 +68,7 @@ public class AdminController {
         User user = userService.findUserById(id);
         model.addAttribute("user", user);
         model.addAttribute("roles", roleService.findAllRoles());
-        return "admin/user-update";
+        return "admin/admin-list";
     }
 
     @PostMapping("/user-update")
