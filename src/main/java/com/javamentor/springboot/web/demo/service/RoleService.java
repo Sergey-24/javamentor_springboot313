@@ -8,7 +8,6 @@ import com.javamentor.springboot.web.demo.entity.Role;
 import java.util.List;
 
 public interface RoleService {
-    List<Role> getRoles(String role);
 
     List<Role> findAllRoles();
 

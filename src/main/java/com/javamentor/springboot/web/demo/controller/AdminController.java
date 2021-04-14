@@ -42,8 +42,8 @@ public class AdminController {
     @PostMapping("/addNewUser")
     public String saveUser(@RequestParam List<String> roles, User user) {
         List<Role> roleList = new ArrayList<>();
-        for (String a : roles) {
-            roleList.add(roleService.findRoleByName(a));
+        for (String role: roles){
+            roleList.add(roleService.findRoleByName(role));
         }
         user.setRoles(roleList);
         userService.saveUser(user);
@@ -74,8 +74,8 @@ public class AdminController {
     @PostMapping("/user-update")
     public String updateUser(@RequestParam List<String> roles, @RequestParam String password, User user) {
         List<Role> roleList = new ArrayList<>();
-        for (String a : roles) {
-            roleList.add(roleService.findRoleByName(a));
+        for (String role: roles){
+            roleList.add(roleService.findRoleByName(role));
         }
         user.setRoles(roleList);
         userService.updateUser(user, password);

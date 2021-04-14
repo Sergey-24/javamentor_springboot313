@@ -24,7 +24,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        return entityManager.createQuery("select distinct u from User u join fetch u.roles")
+        return entityManager.createQuery("SELECT DISTINCT u FROM User u JOIN FETCH u.roles")
                 .getResultList();
     }
 
@@ -42,7 +42,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User findUserById(Long id) {
         return entityManager
-                .createQuery("select u from User u join fetch u.roles where u.id = :id", User.class)
+                .createQuery("SELECT u FROM User u JOIN FETCH u.roles WHERE u.id = :id", User.class)
                 .setParameter("id", id)
                 .getSingleResult();
     }
@@ -55,7 +55,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User findUserByUsername(String name) {
         return entityManager
-                .createQuery("select u from User u join fetch u.roles where u.firstName = :name", User.class)
+                .createQuery("SELECT u FROM User u JOIN FETCH u.roles WHERE u.firstName = :name", User.class)
                 .setParameter("name", name)
                 .getSingleResult();
     }
@@ -63,7 +63,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public String findPassword(User user) {
         Query query = entityManager
-                .createQuery("select u.password from User u where u.firstName = :name")
+                .createQuery("SELECT u.password FROM User u WHERE u.firstName = :name")
                 .setParameter("name", user.getFirstName());
 
         return (String) query.getSingleResult();
