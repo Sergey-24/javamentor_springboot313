@@ -12,4 +12,6 @@ public interface RoleDao {
     void saveRole(Role role);
 
     Role findRoleByName(String roleName);
+
+    List<Role> findRole(List<String> roles);
 }

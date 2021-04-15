@@ -74,9 +74,7 @@ public class AdminController {
     @PostMapping("/user-update")
     public String updateUser(@RequestParam List<String> roles, @RequestParam String password, User user) {
         List<Role> roleList = new ArrayList<>();
-        for (String role: roles){
-            roleList.add(roleService.findRoleByName(role));
-        }
+        roleList.addAll(roleService.findRole(roles));
         user.setRoles(roleList);
         userService.updateUser(user, password);
         return "redirect:/admin";
