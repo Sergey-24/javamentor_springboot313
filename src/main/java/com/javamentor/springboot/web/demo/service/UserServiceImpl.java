@@ -59,11 +59,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(User user, String newpassword) {
+    public User updateUser(User user, String newpassword) {
         if (!passwordEncoder.matches(newpassword, userDao.findPassword(user))) {
             user.setPassword(passwordEncoder.encode(newpassword));
         }
         userDao.updateUser(user);
+        return user;
     }
 
     @Override

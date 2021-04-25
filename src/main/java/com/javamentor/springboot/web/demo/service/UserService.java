@@ -15,7 +15,7 @@ public interface UserService {
 
     User findUserById(Long id);
 
-    void updateUser(User user, String newpassword);
+    User updateUser(User user, String newpassword);
 
     User findUserByUsername(String username);
 
