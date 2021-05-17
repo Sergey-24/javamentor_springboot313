@@ -29,12 +29,8 @@
     <!--Колонка с ролями-->
     <div class="col-md-2 mt-md-3">
         <ul class="nav flex-column nav-pills">
-            <li sec:authorize="hasAuthority('ADMIN')" class="nav-item">
-                <a class="nav-link" aria-current="page" th:href="@{/admin}">Admin</a>
-            </li>
-            <li sec:authorize="hasAuthority('USER')" class="nav-item">
-                <a class="nav-link active" th:href="@{/user}">User</a>
-            </li>
+            <a class="nav-link" aria-current="page" th:href="@{/admin}">Admin</a>
+            <a class="nav-link active" th:href="@{/user}">User</a>
         </ul>
     </div>
     <!--Основная часть страницы-->

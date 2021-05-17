@@ -1,9 +1,11 @@
 package com.javamentor.springboot.web.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 
 // Этот класс реализует интерфейс GrantedAuthority, в котором необходимо переопределить только один метод getAuthority() (возвращает имя роли).
@@ -20,7 +22,6 @@ public class Role implements GrantedAuthority {
     @Column(name = "role")
     private String roleName;
 
-
     public Role() {
     }
 
@@ -36,11 +37,11 @@ public class Role implements GrantedAuthority {
         return roleName;
     }
 
-    public void setUsername(String role) {
+    public void setUsername(String roleName) {
         this.roleName = roleName;
     }
 
-    public Role(String role) {
+    public Role(String roleName) {
         this.roleName = roleName;
     }
 

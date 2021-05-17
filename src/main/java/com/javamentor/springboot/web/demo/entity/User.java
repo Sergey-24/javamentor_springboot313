@@ -1,6 +1,8 @@
 package com.javamentor.springboot.web.demo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,7 +17,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @Column(name = "username")
     private String firstName;
@@ -145,10 +147,12 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    @JsonGetter("isRoleName")
     public List<Role> getRoles() {
         return roles;
     }
 
+    @JsonSetter("isRoleName")
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }

@@ -1,9 +1,10 @@
-$(document).ready(showAll());
+
 //Метод отображения всех пользователей и сама таблица
+$(document).ready(showAll());
 function showAll() {
     if ($('#usersTableNav').hasClass('active') === false) {
-        $('#usersTableNav').addClass("active");
-        $('#newUserNav').removeClass("active");
+        $('#usersTableNav').addClass('active');
+        $('#newUserNav').removeClass('active');
     }
 
     $('#basicSpace').empty();
@@ -29,11 +30,12 @@ function showAll() {
     );
 
 
-    $.getJSON('http://localhost:8089', function (json) {
+    $.getJSON('http://localhost:8089/api/', function (json) {
+
         let tr = [];
 
         for (let i = 0; i < json.length; i++) {
-            let rolesArr = json[i].roles.map(role => role.roleName);
+
             let user = {
                 id: json[i].id,
                 firstName: json[i].firstName,
@@ -41,9 +43,9 @@ function showAll() {
                 age: json[i].age,
                 address: json[i].address,
                 password: json[i].password,
-                roles: rolesArr.sort((a, b) => a.localeCompare(b))
-            };
+                userRole: JSON.stringify(json[i].isRoleName.map(role=> role.authority))
 
+            };
 
             tr.push(`<tr id="${user.id}">`);
             tr.push(`<td>${user.id}</td>`);
@@ -52,7 +54,7 @@ function showAll() {
             tr.push(`<td>${user.age}</td>`);
             tr.push(`<td>${user.address}</td>`);
             tr.push(`<td>${user.password}</td>`);
-            tr.push(`<td>${user.roles}</td>`);
+            tr.push(`<td>${user.userRole}</td>`);
 
             tr.push(`<td><button class="btn btn-primary" onclick="modalEditFunc(${user.id})">Edit</button></td>`);
             tr.push(`<td><button class="btn btn-danger" onclick="modalDeleteFunc(${user.id})">Delete</button></td>`);
@@ -64,8 +66,9 @@ function showAll() {
     });
 }
 
-//Отображение формы создания нового пользователя
-$(document).ready(newUser());
+
+
+// Отображение формы создания нового пользователя
 function newUser() {
     if ($('#newUserNav').hasClass('active') === false) {
         $('#newUserNav').addClass("active");
@@ -79,13 +82,12 @@ function newUser() {
             <div class="row">
                 <div class="col-md-4"></div>
                 <form class="col-md-4 text-center font-weight-bold" id="newUserForm">
+                    <label>FirstName</label>
+                    <input type="text" id="firstName" class="form-control"
+                           placeholder="Input firstName" required/>
 
-                    <label>First name</label>
-                    <input type="text" id="firstname" class="form-control"
-                           placeholder="Input name" required/>
-
-                    <label>Last name</label>
-                    <input type="text" id="lastname" class="form-control"
+                    <label>LastName</label>
+                    <input type="text" id="lastName" class="form-control"
                            placeholder="Input lastName" required/>
 
                     <label>Age</label>
@@ -95,31 +97,32 @@ function newUser() {
                     <label>Address</label>
                     <input type="text" id="address" class="form-control "
                            placeholder="Input address" required/>
-                           
-                            <label>Password</label>
+
+                    <label>Password</label>
                     <input type="text" id="password" class="form-control"
                            placeholder="Input password" required/>
 
                     <hr>
                         <label for="selectRoles">Select roles</label>
-                        <select class="form-control" multiple id="roles" required
+                        <select class="form-control" multiple id="selectRoles" required
                                 size="2">
                             <option value="1">ADMIN</option>
                             <option value="2">USER</option>
                         </select>
                         <br>
                             <button class="btn btn-success" type="submit" onclick="saveUser();
-                            return false">Add new user
+                            return false">
+                            Add new user
                             </button>
                 </form>
                 <div class="col-md-4"></div>
             </div>
         </div>
     </div>`);
-}
 
+}
 //Отправка формы нового пользователя на контроллер
-$(document).ready(saveUser());
+
 function saveUser() {
     let selectedRoles = window.querySelectorAll('#selectRoles option:checked');
     let roleSet = new Set();
@@ -131,11 +134,11 @@ function saveUser() {
     }
 
     let user = {
-        firstName: window.firstName.value,
-        lastName: window.lastName.value,
-        age: window.age.value,
-        address: window.address.value,
-        password: window.password.value,
+        firstName: window.newUserForm.firstName.value,
+        lastName: window.newUserForm.lastName.value,
+        age: window.newUserForm.age.value,
+        address: window.newUserForm.address.value,
+        password: window.newUserForm.password.value,
         roles: Array.from(roleSet)
     };
     if (!(Object.values(user)).includes(null)) {
@@ -157,7 +160,6 @@ function saveUser() {
                     <td>${response.address}</td>
                     <td>${response.password}</td>
                     <td>${responseRoles}</td>
-
                     <td><button class="btn btn-primary editButton" onclick="modalEditFunc(${response.id})">Edit</button></td>
                     <td><button class="btn btn-danger deleteButton" onclick="modalDeleteFunc(${response.id})">Delete</button></td>
                     </tr>`
@@ -169,24 +171,26 @@ function saveUser() {
     }
 }
 
+
+
 //Модальное окно с формой редактирования пользователя
-$(document).ready(modalEditFunc(id));
-function modalEditFunc(id) {
-    $.getJSON('http://localhost:8089' + id, function (json) {
-        let user = {
-            id: json.id,
-            firstName: json.firstName,
-            lastName: json.lastName,
-            age: json.age,
-            address: json.address,
-            password: json.password,
-            role: json.role.map(role => role.role)
-        };
 
-        let modal = document.getElementById('modalWindow');
+    function modalEditFunc(id) {
+        $.getJSON('http://localhost:8089/api/' + id, function (json) {
+            let user = {
+                id: json.id,
+                firstName: json.firstName,
+                lastName: json.lastName,
+                age: json.age,
+                address: json.address,
+                password: json.password,
+                userRole: json.isRoleName
+            };
 
-        modal.innerHTML =
-            `<div class="modal fade" id="modalEdit" tabindex="-1"
+            let modal = document.getElementById('modalWindow');
+
+            modal.innerHTML =
+                `<div class="modal fade" id="modalEdit" tabindex="-1"
                  aria-hidden="true"
                  aria-labelledby="modalEdit">
                 <div class="modal-dialog">
@@ -205,31 +209,31 @@ function modalEditFunc(id) {
                                     <form class="text-center" id="formEdit">
                                         <div class="form-group">
                                             <label for="eID">ID</label>
-                                            <input class="form-control" type="number" id="eID" name="id" value="${user.id}" readOnly/>                                                   
+                                            <input class="form-control" type="number" id="eID" name="id" value="${user.id}" readOnly/>
                                         </div>
 
                                         <div class="form-group">
-                                        <label for="efirstname">FirstName</label>
-                                        <input class="form-control" type="text" id="efirstname" name="name" value="${user.firstName}"/>
+                                        <label for="eFirstname">FirstName</label>
+                                        <input class="form-control" type="text" id="eFirstname" name="name" value="${user.firstName}"/>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="elastname">LastName</label>
-                                            <input class="form-control" type="text" id="elastname" name="lastname" value="${user.lastName}"/>
+                                            <label for="eLastname">LastName</label>
+                                            <input class="form-control" type="text" id="eLastname" name="lastname" value="${user.lastName}"/>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="eage">Age</label>
-                                            <input class="form-control" type="text" id="eage" name="age" value="${user.age}"/>
+                                            <label for="eAge">Age</label>
+                                            <input class="form-control" type="text" id="eAge" name="age" value="${user.age}"/>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="eAddress">Address</label>
-                                            <input class="form-control" type="text" id="eAddress" name="eAddress" value="${user.address}"/>
+                                            <input class="form-control" type="text" id="eAddress" name="address" value="${user.address}"/>
                                         </div>
-                                       
+
                                         <label for="ePassword">Password</label>
-                                        <input type="password" id="ePassword" class="form-control" placeholder="Input password"/>
+                                        <input class="form-control" type="text" id="ePassword" name="password" value="${user.password}" />
 
                                         <div class="form-group">
                                             <label for="eSelectRoles">ROLE</label>
@@ -245,52 +249,51 @@ function modalEditFunc(id) {
                         </div>
                         <div class="modal-footer">
                             <div class="btn-block text-right">
-                                <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Close"/>                                      
+                                <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Close"/>
                                 <input class="btn btn-primary" type="submit" onclick="updateUser()" data-dismiss="modal" value="Edit"/>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>`;
-        $('#modalEdit').modal();
-    });
-}
-
-//Отправка формы отредактированного пользователя на контроллер
-$(document).ready(updateUser());
-function updateUser() {
-    let selectedRoles = window.formEdit.querySelectorAll('#eSelectRoles option:checked');
-    let roleSet = new Set();
-
-    for (let i = 0; i < selectedRoles.length; i++) {
-        selectedRoles[i].value === "1"
-            ? roleSet.add({"id": 1, "roleName": "ADMIN"})
-            : roleSet.add({"id": 2, "roleName": "USER"})
+            $('#modalEdit').modal();
+        });
     }
 
-    let user = {
-        id: window.id.value,
-        name: window.firstName.value,
-        surname: window.lastName.value,
-        profession: window.age.value,
-        password: window.address.value,
-        email: window.password.value,
-        roles: Array.from(roleSet)
-    };
+// //Отправка формы отредактированного пользователя на контроллер
 
-    $.ajax({
-        type: "PUT",
-        contentType: "application/json; charset=utf-8",
-        url: 'http://localhost:8089/update',
-        data: JSON.stringify(user),
-        dataType: 'json',
-        cache: false,
-        success: function (response) {
-            let responseRoles = response.roles.map(role => role.roleName).sort((a, b) => a.localeCompare(b));
+    function updateUser() {
+        let selectedRoles = window.querySelectorAll('#eSelectRoles option:checked');
+        let roleSet = new Set();
 
-            $(`#${response.id}`)
-                .replaceWith(
-                    `<tr id="${response.id}">
+        for (let i = 0; i < selectedRoles.length; i++) {
+            selectedRoles[i].value === "1"
+                ? roleSet.add({"id": 1, "roleName": "ADMIN"})
+                : roleSet.add({"id": 2, "roleName": "USER"})
+        }
+
+        let user = {
+            id: window.formEdit.eID.value,
+            firstName: window.formEdit.eFirstName.value,
+            lastName: window.formEdit.eLastName.value,
+            age: window.formEdit.eAge.value,
+            address: window.formEdit.eAddress.value,
+            password: window.formEdit.ePassword.value,
+            userRole: Array.from(roleSet)
+        };
+
+        $.ajax({
+            type: "PUT",
+            contentType: "application/json; charset=utf-8",
+            url: 'http://localhost:8089/api/update',
+            data: JSON.stringify(user),
+            dataType: 'json',
+            cache: false,
+            success: function (response) {
+                let responseRoles = response.roles.map(role => role.roleName).sort((a, b) => a.localeCompare(b));
+                $(`#${response.id}`)
+                    .replaceWith(
+                        `<tr id="${response.id}">
                         <td>${response.id}</td>
                         <td>${response.firstName}</td>
                         <td>${response.lastName}</td>
@@ -302,28 +305,29 @@ function updateUser() {
                     <td><button class="btn btn-primary" onclick="modalEditFunc(${response.id})">Edit</button></td>
                     <td><button class="btn btn-danger" onclick="modalDeleteFunc(${response.id})">Delete</button></td>
                     </tr>`
-                )
-        }
-    })
-}
-//Модальное окно с формой для удаления пользователя
-$(document).ready(modalDeleteFunc(id));
-function modalDeleteFunc(id) {
-    $.getJSON('http://localhost:8089' + id, function (json) {
-        let user = {
-            id: json.id,
-            name: json.firstName,
-            lastname: json.lastName,
-            profession: json.age,
-            address: json.address,
-            password: json.password,
-            roles: json.role.map(role => role.role)
-        };
+                    )
+            }
+        })
+    }
 
-        let modal = document.getElementById('modalWindow');
+    //Модальное окно с формой для удаления пользователя
 
-        modal.innerHTML =
-            `<div class="modal fade" id="modalDelete" tabindex="-1"
+    function modalDeleteFunc(id) {
+        $.getJSON('http://localhost:8089/api/' + id, function (json) {
+            let user = {
+                id: json.id,
+                name: json.firstName,
+                lastname: json.lastName,
+                profession: json.age,
+                address: json.address,
+                password: json.password,
+                userRole: JSON.stringify(json)
+            };
+
+            let modal = document.getElementById('modalWindow');
+
+            modal.innerHTML =
+                `<div class="modal fade" id="modalDelete" tabindex="-1"
                  aria-hidden="true"
                  aria-labelledby="modalDelete">
                 <div class="modal-dialog">
@@ -345,32 +349,32 @@ function modalDeleteFunc(id) {
                                                 <label for="dID">ID</label>
                                                 <input class="form-control" type="number" id="dID" name="id" value="${user.id}" readonly/>
                                             </div>
-            
+
                                             <div class="form-group">
-                                                <label for="dfirstname">FirstName</label>
-                                                <input class="form-control" type="text" id="dfirstname" name="firstname" value="${user.firstName}"/>
+                                                <label for="dFirstname">FirstName</label>
+                                                <input class="form-control" type="text" id="dFirstname" name="firstname" value="${user.firstName}"/>
                                             </div>
-           
+
                                             <div class="form-group">
-                                                <label for="dlastname">LastName</label>
-                                                <input class="form-control" type="text" id="dlastname" name="lastName" value="${user.lastName}"/>
+                                                <label for="dLastname">LastName</label>
+                                                <input class="form-control" type="text" id="dLastname" name="lastName" value="${user.lastName}"/>
                                             </div>
-            
+
                                             <div class="form-group">
                                                 <label for="dAge">Profession</label>
                                                 <input class="form-control" type="text" id="dAge" name="age" value="${user.age}"/>
                                             </div>
-                                            
+
                                             <div class="form-group">
                                                 <label for="dAddress">Profession</label>
                                                 <input class="form-control" type="text" id="dAddress" name="address" value="${user.address}"/>
                                             </div>
-            
+
                                             <div class="form-group">
                                                 <label for="dPassword">Password</label>
                                                 <input class="form-control" type="text" id="dPassword" name="password" value="${user.password}" />
                                             </div>
-            
+
                                             <div class="form-group">
                                             <label for="dSelectRoles">ROLE</label>
                                             <select class="form-control" name="selectRoles[]"
@@ -384,9 +388,9 @@ function modalDeleteFunc(id) {
                                     </form>
                                 <div class="col-md-3"></div>
                             </div>
-            
+
                         </div>
-            
+
                         <div class="modal-footer">
                             <div class="btn-block text-right">
                                 <input type="button" class="btn btn-secondary"
@@ -402,24 +406,25 @@ function modalDeleteFunc(id) {
                 </div>
             </div>`;
 
-        $('#modalDelete').modal();
-    });
-}
+            $('#modalDelete').modal();
+        });
+    }
 
-//Отправка формы удаляемого пользователя на контроллер
-$(document).ready(deleteUser());
-function deleteUser() {
+// Отправка формы удаляемого пользователя на контроллер
 
-    let id = window.id.value;
+    function deleteUser() {
 
-    $.ajax({
-        type: "DELETE",
-        contentType: "application/json; charset=utf-8",
-        url: 'http://localhost:8089/delete',
-        data: JSON.stringify(id),
-        dataType: 'json',
-        cache: false,
-        success:
-            $('#' + id).remove()
-    })
-}
+        let id = window.formDelete.dID.value;
+
+        $.ajax({
+            type: "DELETE",
+            contentType: "application/json; charset=utf-8",
+            url: 'http://localhost:8089/api/delete',
+            data: JSON.stringify(id),
+            dataType: 'json',
+            cache: false,
+            success:
+                $('#' + id).remove()
+        })
+    }
+

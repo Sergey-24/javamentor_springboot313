@@ -1,10 +1,12 @@
 package com.javamentor.springboot.web.demo.controller;
 
+import com.javamentor.springboot.web.demo.entity.Role;
 import com.javamentor.springboot.web.demo.entity.User;
 import com.javamentor.springboot.web.demo.service.RoleService;
 import com.javamentor.springboot.web.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,13 +38,15 @@ public class MainRestController {
     }
 
     @GetMapping("/{id}")
-    public User showUserById(@PathVariable("id") long id) {
-        return userService.findUserById(id);
+    public ResponseEntity<User> showUserById(@PathVariable("id") long id) {
+        User user = userService.findUserById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/update")
-    public User saveOrUpdateUser(@RequestBody User user) {
-        return userService.updateUser(user, user.getPassword());
+    public ResponseEntity<User> saveOrUpdateUser(@RequestBody User user) {
+        userService.updateUser(user, user.getPassword());
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
