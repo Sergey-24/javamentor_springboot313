@@ -1,12 +1,10 @@
 package com.javamentor.springboot.web.demo.controller;
 
-import com.javamentor.springboot.web.demo.entity.Role;
 import com.javamentor.springboot.web.demo.entity.User;
 import com.javamentor.springboot.web.demo.service.RoleService;
 import com.javamentor.springboot.web.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
