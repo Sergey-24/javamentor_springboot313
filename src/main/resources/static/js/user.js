@@ -127,11 +127,9 @@ function newUser() {
 //Отправка формы нового пользователя на контроллер
 
 function saveUser() {
-    let selValue = $("#newUserForm:selected").val();
 
     let selectedRoles = window.document.querySelectorAll('#selectRoles option:checked');
     let roleSet = new Set();
-
 
 
     for (let i = 0; i < selectedRoles.length; i++) {
@@ -141,18 +139,15 @@ function saveUser() {
     }
 
 
-
     let user = {
-        firstName: $("#firstName_id").val(selValue),
-        lastName: $("#lastName_id").val(selValue),
-        age: $("#age_id").val(selValue),
-        address: $("#address_id").val(selValue),
-        password: $("#password_id").val(selValue),
+        firstName: $("#firstName_id").val(),
+        lastName: $("#lastName_id").val(),
+        age: $("#age_id").val(),
+        address: $("#address_id").val(),
+        password: $("#password_id").val(),
         roles: Array.from(roleSet)
 
     };
-
-
 
 
     if (!(Object.values(user)).includes(null)) {
@@ -166,7 +161,6 @@ function saveUser() {
             success: function (){
                 showAll();
             }
-
         });
     }
 
@@ -186,7 +180,7 @@ function saveUser() {
                 age: json.age,
                 address: json.address,
                 password: json.password,
-                userRole: json.roles
+                userRole: json.roles.map(role=> role.authority)
             };
 
             let modal = document.getElementById('modalWindow');
@@ -252,7 +246,7 @@ function saveUser() {
                         <div class="modal-footer">
                             <div class="btn-block text-right">
                                 <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Close"/>
-                                <input class="btn btn-primary" type="submit" onclick="updateUser()" data-dismiss="modal" value="Edit"/>
+                                <input class="btn btn-primary" type="submit" onclick="updateUser(); return false" data-dismiss="modal" value="Edit"/>
                             </div>
                         </div>
                     </div>
@@ -265,7 +259,7 @@ function saveUser() {
 // //Отправка формы отредактированного пользователя на контроллер
 
     function updateUser() {
-        let selectedRoles = window.querySelectorAll('#eSelectRoles option:checked');
+        let selectedRoles = window.document.querySelectorAll('#eSelectRoles option:checked');
         let roleSet = new Set();
 
         for (let i = 0; i < selectedRoles.length; i++) {
@@ -275,39 +269,24 @@ function saveUser() {
         }
 
         let user = {
-            id: window.formEdit.eID.value,
-            firstName: window.formEdit.eFirstName.value,
-            lastName: window.formEdit.eLastName.value,
-            age: window.formEdit.eAge.value,
-            address: window.formEdit.eAddress.value,
-            password: window.formEdit.ePassword.value,
-            userRole: Array.from(roleSet)
+            id: $("#eID").val(),
+            firstName: $("#eFirstname").val(),
+            lastName: $("#eLastname").val(),
+            age: $("#eAge").val(),
+            address: $("#eAddress").val(),
+            password: $("#ePassword").val(),
+            roles: Array.from(roleSet)
         };
 
         $.ajax({
             type: "PUT",
             contentType: "application/json; charset=utf-8",
-            url: 'http://localhost:8089/api/update',
+            url: 'http://localhost:8089/api/update/'+user.id,
             data: JSON.stringify(user),
             dataType: 'json',
             cache: false,
-            success: function (response) {
-                let responseRoles = response.roles.map(role => role.roleName).sort((a, b) => a.localeCompare(b));
-                $(`#${response.id}`)
-                    .replaceWith(
-                        `<tr id="${response.id}">
-                        <td>${response.id}</td>
-                        <td>${response.firstName}</td>
-                        <td>${response.lastName}</td>
-                        <td>${response.age}</td>
-                        <td>${response.address}</td>
-                        <td>${response.password}</td>
-                        <td>${responseRoles}</td>
-
-                    <td><button class="btn btn-primary" onclick="modalEditFunc(${response.id})">Edit</button></td>
-                    <td><button class="btn btn-danger" onclick="modalDeleteFunc(${response.id})">Delete</button></td>
-                    </tr>`
-                    )
+            success: function () {
+                showAll();
             }
         })
     }
@@ -323,7 +302,7 @@ function saveUser() {
                 profession: json.age,
                 address: json.address,
                 password: json.password,
-                userRole: json.roles
+                userRole: json.roles.map(role=> role.authority)
             };
 
             let modal = document.getElementById('modalWindow');
@@ -398,7 +377,7 @@ function saveUser() {
                                 <input type="button" class="btn btn-secondary"
                                        data-dismiss="modal" value="Close"/>
                                 <input class="btn btn-danger"
-                                       onclick="deleteUser()"
+                                       onclick="deleteUser(); return false;"
                                        data-dismiss="modal"
                                        type="button"
                                        value="Delete"/>
@@ -408,7 +387,7 @@ function saveUser() {
                 </div>
             </div>`;
 
-            // $('#modalDelete').modal();
+            $('#modalDelete').modal();
         });
     }
 
@@ -416,12 +395,12 @@ function saveUser() {
 
     function deleteUser() {
 
-        let id = window.formDelete.dID.value;
+            let id = $("#dID").val();
 
-        $.ajax({
+            $.ajax({
             type: "DELETE",
             contentType: "application/json; charset=utf-8",
-            url: 'http://localhost:8089/api/delete',
+            url: 'http://localhost:8089/api/delete' + id,
             data: JSON.stringify(id),
             dataType: 'json',
             cache: false,
@@ -429,4 +408,3 @@ function saveUser() {
                 $('#' + id).remove()
         })
     }
-
