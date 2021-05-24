@@ -1,8 +1,6 @@
 package com.javamentor.springboot.web.demo.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,8 +33,7 @@ public class User implements UserDetails {
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
@@ -147,12 +144,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    @JsonGetter("isRoleName")
     public List<Role> getRoles() {
         return roles;
     }
 
-    @JsonSetter("isRoleName")
+
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }

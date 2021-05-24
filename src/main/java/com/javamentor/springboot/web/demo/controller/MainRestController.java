@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 @RestController
@@ -35,20 +36,28 @@ public class MainRestController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<User> showUserById(@PathVariable("id") long id) {
         User user = userService.findUserById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<User> saveOrUpdateUser(@RequestBody User user) {
-        userService.updateUser(user, user.getPassword());
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User userDetails) {
+        User user = userService.findUserById(id);
+        user.setId(userDetails.getId());
+        user.setFirstName(userDetails.getFirstName());
+        user.setLastName(userDetails.getLastName());
+        user.setAge(userDetails.getAge());
+        user.setPassword(userDetails.getPassword());
+        user.setRoles(userDetails.getRoles());
+        User updateUser = userService.updateUser(user, user.getPassword());
+        return ResponseEntity.ok().body(updateUser);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteUser(@RequestBody long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable long id) {
         userService.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

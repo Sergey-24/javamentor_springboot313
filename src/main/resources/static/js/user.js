@@ -43,7 +43,7 @@ function showAll() {
                 age: json[i].age,
                 address: json[i].address,
                 password: json[i].password,
-                userRole: JSON.stringify(json[i].isRoleName.map(role=> role.authority))
+                userRole: JSON.stringify(json[i].roles.map(role=> role.authority))
 
             };
 
@@ -83,23 +83,23 @@ function newUser() {
                 <div class="col-md-4"></div>
                 <form class="col-md-4 text-center font-weight-bold" id="newUserForm">
                     <label>FirstName</label>
-                    <input type="text" id="firstName" class="form-control"
+                    <input type="text" id="firstName_id" class="form-control"
                            placeholder="Input firstName" required/>
 
                     <label>LastName</label>
-                    <input type="text" id="lastName" class="form-control"
+                    <input type="text" id="lastName_id" class="form-control"
                            placeholder="Input lastName" required/>
 
                     <label>Age</label>
-                    <input type="text" id="age" class="form-control"
+                    <input type="text" id="age_id" class="form-control"
                            placeholder="Input age" required/>
 
                     <label>Address</label>
-                    <input type="text" id="address" class="form-control "
+                    <input type="text" id="address_id" class="form-control "
                            placeholder="Input address" required/>
 
                     <label>Password</label>
-                    <input type="text" id="password" class="form-control"
+                    <input type="text" id="password_id" class="form-control"
                            placeholder="Input password" required/>
 
                     <hr>
@@ -109,6 +109,7 @@ function newUser() {
                             <option value="1">ADMIN</option>
                             <option value="2">USER</option>
                         </select>
+
                         <br>
                             <button class="btn btn-success" type="submit" onclick="saveUser();
                             return false">
@@ -121,55 +122,56 @@ function newUser() {
     </div>`);
 
 }
+
+
 //Отправка формы нового пользователя на контроллер
 
 function saveUser() {
-    let selectedRoles = window.querySelectorAll('#selectRoles option:checked');
+    let selValue = $("#newUserForm:selected").val();
+
+    let selectedRoles = window.document.querySelectorAll('#selectRoles option:checked');
     let roleSet = new Set();
+
+
 
     for (let i = 0; i < selectedRoles.length; i++) {
         selectedRoles[i].value === "1"
-            ? roleSet.add({"id": 1, "roleName": "ADMIN"})
-            : roleSet.add({"id": 2, "roleName": "USER"})
+            ? roleSet.add({"id": 1, "authority": "ADMIN"})
+            : roleSet.add({"id": 2, "authority": "USER"})
     }
 
+
+
     let user = {
-        firstName: window.newUserForm.firstName.value,
-        lastName: window.newUserForm.lastName.value,
-        age: window.newUserForm.age.value,
-        address: window.newUserForm.address.value,
-        password: window.newUserForm.password.value,
+        firstName: $("#firstName_id").val(selValue),
+        lastName: $("#lastName_id").val(selValue),
+        age: $("#age_id").val(selValue),
+        address: $("#address_id").val(selValue),
+        password: $("#password_id").val(selValue),
         roles: Array.from(roleSet)
+
     };
+
+
+
+
     if (!(Object.values(user)).includes(null)) {
         $.ajax({
             type: "POST",
             contentType: "application/json; charset=utf-8",
-            url: 'http://localhost:8089/save',
+            url: 'http://localhost:8089/api/save',
             data: JSON.stringify(user),
-            dataType: 'json',
+            dataType: "json",
             cache: false,
-            success: function (response) {
-                let responseRoles = response.roles.map(role => role.roleName).sort((a, b) => a.localeCompare(b));
-                $('#tbody').append(
-                    `<tr id="${response.id}">
-                    <td>${response.id}</td>
-                    <td>${response.firstName}</td>
-                    <td>${response.lastName}</td>
-                    <td>${response.age}</td>
-                    <td>${response.address}</td>
-                    <td>${response.password}</td>
-                    <td>${responseRoles}</td>
-                    <td><button class="btn btn-primary editButton" onclick="modalEditFunc(${response.id})">Edit</button></td>
-                    <td><button class="btn btn-danger deleteButton" onclick="modalDeleteFunc(${response.id})">Delete</button></td>
-                    </tr>`
-                );
+            success: function (){
                 showAll();
             }
 
         });
     }
+
 }
+
 
 
 
@@ -184,7 +186,7 @@ function saveUser() {
                 age: json.age,
                 address: json.address,
                 password: json.password,
-                userRole: json.isRoleName
+                userRole: json.roles
             };
 
             let modal = document.getElementById('modalWindow');
@@ -321,7 +323,7 @@ function saveUser() {
                 profession: json.age,
                 address: json.address,
                 password: json.password,
-                userRole: JSON.stringify(json)
+                userRole: json.roles
             };
 
             let modal = document.getElementById('modalWindow');
@@ -406,7 +408,7 @@ function saveUser() {
                 </div>
             </div>`;
 
-            $('#modalDelete').modal();
+            // $('#modalDelete').modal();
         });
     }
 
